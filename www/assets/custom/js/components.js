@@ -118,6 +118,10 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 			.html('- Pilih Jumlah Polis -')
 		);
 		myApp.showIndicator();
+
+		if(this.value == 0){
+			myApp.hideIndicator();
+		}
 		$.post(`${URL}/x-mob-produk.php`,{
 			id: this.value
 		},
@@ -176,7 +180,7 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 			}
 		},
     messages: {
-		
+
 			Jumlah: {
 				required: 'Mohon masukan Jumlah Polis',				
 			},

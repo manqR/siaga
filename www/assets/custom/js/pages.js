@@ -243,12 +243,54 @@ myApp.onPageInit('home', function(page) {
 	});
 
 	/* Hero Slider */
-	myApp.swiper('.page[data-page=home] .slider-hero .swiper-container', {
-		autoplay: 10000,
-		loop: true,
-		pagination: '.swiper-pagination',
-		paginationClickable: true
-	});
+	
+	var html = '';
+	var slider = '';
+	$.get(`${URL}/x-mob-slider.php`, 
+		function(data, status){
+			//myApp.hideIndicator();
+			var slidex = '';		
+			if(data != null){
+	
+				data.map((slide) => {	
+					slidex +='<div class="swiper-slide" style="background-image: url('+slide.IMG_SLIDE+');">'+
+								'<div class="slide-content">'+
+								'</div>'+
+							'</div>';					
+					
+				})
+
+				slider = '<div class="swiper-container">'+
+							'<div class="swiper-wrapper" >'+
+							
+								slidex +
+								
+							'</div>'+
+							'<div class="swiper-pagination"></div>'+
+						'</div>';
+			
+				$$(".swiper-wrapper").css("height", "");
+				$$(".swiper-wrapper img").css("display", "none");
+				$$("#temp_preview").css("display", "none");
+
+				document.getElementById("inner_slider").innerHTML = '';
+				document.getElementById("inner_slider").innerHTML = slider;
+
+				// var mySwiper = myApp.swiper('.swiper-container', {
+				// 	pagination:'.swiper-pagination',
+				// 	speed: 400,
+				// });
+				myApp.swiper('.page[data-page=home] .slider-hero .swiper-container', {
+					autoplay: 10000,
+					loop: true,
+					pagination: '.swiper-pagination',
+					paginationClickable: true
+				});
+				//console.log(slidex);
+		
+			}
+		}
+	);
 
 	/* menu home */
 	var largest = 0

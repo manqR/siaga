@@ -94,6 +94,13 @@
 	font-weight: bold;
 }
 
+.page[data-page=done] img {
+	height: 90vw;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .page[data-page=done] .products-list .item-subtitle {
 	-webkit-box-orient: vertical;
 	display: -webkit-box;
@@ -204,6 +211,12 @@
 	font-size: 14px;
 }
 
+.page[data-page=riwayat] img {
+	height: 90vw;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 .page[data-page=riwayat] .products-list .item-title {
 	-webkit-box-orient: vertical;
 	display: -webkit-box;
@@ -375,6 +388,11 @@
 |------------------------------------------------------------------------------
 */
 
+
+.page[data-page=pembelian-voucher] ::placeholder {
+	color: #bfbfbf;
+    opacity: 1; 
+}
 .page[data-page=home] .list-block.contact-info .social .item-title {
 	overflow: auto;
 	white-space: normal;
@@ -492,6 +510,52 @@
 	font-size: 14px;
 }
 
+/*
+|------------------------------------------------------------------------------
+| Events
+|------------------------------------------------------------------------------
+*/
+
+.page[data-page=events] #his_err {
+	align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    justify-content: center;
+    overflow: hidden;
+    padding: 16px;
+    text-align: center;
+}
+
+.page[data-page=events] ::placeholder {
+	color: #bfbfbf;
+    opacity: 1; 
+}
+
+.page[data-page=events] .line_inner {
+	display: block;
+    margin-bottom: 4px;
+    padding-bottom: 0;
+}
+.page[data-page=events] .input-error{
+	color: #F44336;
+    font-size: 11px;
+}
+
+.page[data-page=events]  .swiper-slide {
+	background:#fff;
+  }
+
+.page[data-page=events]  .swiper-slide span {
+	text-align:center;
+	display:block;
+	margin:20px;
+	font-size:21px;
+  }
+.page[data-page=events]  .swiper-img {	
+    width: 99vw;
+  }
 /*
 |------------------------------------------------------------------------------
 | Feedback

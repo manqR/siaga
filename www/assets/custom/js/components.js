@@ -22,7 +22,7 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 	});
 	
 	/* Basic Calendar */
-	var calendarBasic = myApp.calendar({
+	var calendarBasic = myApp.calendar({pembelian-vo
     input: '.page[data-page=pembelian-voucher] #calendar-basic'
 	});
 
@@ -88,11 +88,16 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 		theme: 'android-ics light',		// Specify theme like: theme: 'ios' or omit setting to use default                    
 	});	
 
+	var myNumpadLimitedValueLength = myApp.keypad({
+		input: '.page[data-page=pembelian-voucher] #numpad-limited-value-length',
+		valueMaxLength: 12,
+		dotButton: false
+	});
 
 	myApp.showIndicator();
 	$('.changes').css('display','block');	
 	$("select#paket").append( $("<option>")
-		.val('0')
+		.val('')
 		.html('- Pilih Masa Asuransi -')
 	);
 	
@@ -114,7 +119,7 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 	$('select#paket').on('change', function() {		
 		$("select#jumlah").append('').html('');
 		$("select#jumlah").append( $("<option>")
-			.val('0')
+			.val('')
 			.html('- Pilih Jumlah Polis -')
 		);
 		myApp.showIndicator();
@@ -152,6 +157,9 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 			Jumlah: {
 				required: true,				
 			},
+			Paket: {
+				required: true,				
+			},
 			nama: {
 				required: true,				
 			},
@@ -181,6 +189,9 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 		},
     messages: {
 
+			Paket: {
+				required: 'Mohon masukan Paket Asuransi Mikor Siaga',				
+			},
 			Jumlah: {
 				required: 'Mohon masukan Jumlah Polis',				
 			},
@@ -247,13 +258,21 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 			},
 			function(data, status){				
 				data.map((xx) => {
-					if(xx.ERR == 'OK'){							
-						console.log(xx);
+					if(xx.ERR == 'OK'){	
+						$.post(`${URL}/x-mob-promo.php`,{
+							MODE: 1,
+							NO_INVOICE:''		
+						},function(data, status){					
+							if(data[0].WORDING_PROMO != null){
+								//console.log(data[0].WORDING_PROMO)								
+								$$('#promo').css('display','block');	
+								document.getElementById("promo").innerHTML = data[0].WORDING_PROMO;
+							}
+						})						
 						myApp.hideIndicator();
 
 						document.getElementById("invoice").innerHTML = "#"+xx.Inv;
-						document.getElementById("price").innerHTML = "Rp "+ xx.AmountV;
-						// document.getElementById("sub").innerHTML = "Rp "+ xx.AmountV;
+						document.getElementById("price").innerHTML = "Rp "+ xx.AmountV;						
 						document.getElementById("pay").innerHTML = "Rp "+ xx.AmountV;
 						document.getElementById("grnd").innerHTML = "Rp "+ xx.AmountV;
 						document.getElementById("pack").innerHTML = xx.Paket;
@@ -267,7 +286,7 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 							
 						}
 						$$('#submit-form').on('click', function() {
-							console.log('submit');
+							//console.log('submit');
 							payChannel();								
 							myApp.hideIndicator();
 							myApp.closeModal('.cart_b');
@@ -284,7 +303,7 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 														
 						})
 						function payChannel() {
-							console.log('klik');
+							//console.log('klik');
 							var ref;								
 							var pageContent = '<html><head></head><body><form id="MerchatPaymentPage" name="MerchatPaymentPage" action="'+DOKU+'" method="post">' +
 							'<input type="hidden" name="BASKET" id="BASKET" value="'+xx.BASKET+'">'+
@@ -383,24 +402,13 @@ myApp.onPageInit('status-voucher', function(page) {
 	var LINK;
 
 	myApp.showIndicator();
-	// $.post(`${URL}/x-mob-card.php`, {
-	// 	Uuid: device.uuid
-	// },function(data) {
-	// 	data.map((rows) => {
-	// 		console.log('card' + rows.ID);
-	// 		document.getElementById("devid").innerHTML = rows.ID;
-	// 		document.getElementById("name").innerHTML = rows.NAMA;
-	// 		myApp.hideIndicator();
-	// 	})
-		
-	// })
 
 	$.post(`${URL}/x-mob-histori.php`, {
 		Uuid: device.uuid
 	},function(data, status) {		
 		data.map((row) => {
 			myApp.hideIndicator();
-			console.log(row);
+			//console.log(row);
 			if(row.ERR == 'OK'){			
 				if(row.STATUS == 1){
 					LINK = 'pending.html';
@@ -492,146 +500,6 @@ myApp.onPageInit('status-voucher', function(page) {
 		
 	})	
 
-
-	// var wait = setInterval(function() {
-	// 	$.post(`${URL}/x-mob-histori.php`, {
-	// 		Uuid: device.uuid
-	// 	},function(data) {
-	// 		data.map((row) => {				
-	// 			checkHist();
-	// 		})
-	// 	})																		
-	// }, 10000);
-
-	// $('.page[data-page=status-voucher] form[name=status-voucher]').validate({
-	// 	rules: {
-	// 		noinvoice: {
-	// 			required: true
-    //  	 	}
-	// 	},
-    // messages: {
-	// 		noinvoice: {
-	// 			required: 'Mohon Masukan Nomor Invoice dengan benar'
-    //   		}
-	// 	},
-	// 	onkeyup: false,
-    // errorElement : 'div',
-	// 	errorPlacement: function(error, element) {
-	// 		error.appendTo(element.parent().siblings('.input-error'));
-	// 	},
-	// 	submitHandler: function(form) {
-	// 		var NOMOR_VA = $("input[name=noinvoice]").val();					
-	// 		$.post(`${URL}/x-mob-cekstatus-js.php`,{
-	// 			NOMOR_VA: NOMOR_VA,			
-	// 		},
-	// 		function(data, status){				
-	// 			data.map((xx) => {
-	// 				console.log(data);
-	// 				if(xx.ERR == 'OK'){
-	// 					var html = '';			
-	// 						html += '<div class="toolbar">';
-	// 							html += '<div class="toolbar-inner">';
-	// 								html += '<div class="left">';
-	// 									html += '<a href="#" class="link disabled"></a>';
-	// 								html += '</div>';
-	// 								html += '<div class="center">Aktivasi Berhasil</div>';
-	// 									html += '<div class="right">';
-	// 										html += '<a href="#" class="link close-popup">';
-	// 											html += '<i class="material-icons">clear</i>';
-	// 										html += '</a>';
-	// 									html += '</div>';
-	// 								html += '</div>';
-	// 						html += '</div>';
-	// 						html += '<div class="error-container">';
-	// 							html += '<div class="error-media">';
-	// 								html += '<a href="#" class="download"><img src="assets/custom/img/print.svg" alt="Suksess" /></a>';
-	// 							html += '</div>';								
-	// 							html += '<div class="error-message">Silahkan download dan print polis anda untuk dokumen resmi polis asuransi anda. </div>';
-	// 						html += '</div>';
-
-	// 						$$('.page[data-page=status-voucher] .popup-status').append(html).html('');						
-	// 						$$('.page[data-page=status-voucher] .popup-status').append(html);	
-	// 						myApp.popup('.popup-status');			
-					
-	// 							$.post(`${URL}/x-mob-pdf.php`,{
-	// 								nama: xx.nama,
-	// 								alamat1: xx.alamat1,
-	// 								kota: xx.kota,
-	// 								provinsi: xx.provinsi,
-	// 								kodepos : xx.kodepos,
-	// 								birthdate: xx.birthdate,
-	// 								grouppremi : xx.grouppremi,
-	// 								premi : xx.premi+'.00',
-	// 								code: xx.code,
-	// 								issuedate: xx.issuedate,
-	// 								enddate: xx.enddate,
-	// 								UP: xx.UP,
-	// 								UP_convert: xx.UP + '.00',
-	// 								UP_AMR : xx.UP / 10,
-	// 								UP_AMR_convert : xx.UP / 10 + '.00',
-	// 								enddate : xx.enddate,
-	// 								aw1 : xx.aw1,
-	// 								aw1hub : xx.aw1hub,
-	// 								aw2 : xx.aw2,
-	// 								aw2hub : xx.aw2hub,
-	// 								aw3 : xx.aw3,
-	// 								aw3hub : xx.aw3hub,
-	// 								description : xx.description,
-	// 								pin : xx.pin,
-	// 								alamat : xx.alamat1.trim(),
-	// 								NOMOR_VA : xx.NOMOR_VA,
-	// 								nopol : xx.nopol							
-		
-	// 							},
-	// 							function(attr, status){	
-	// 								console.log(status);	
-	// 								$(".download").click(function () {			
-	// 									//window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xx.NOMOR_VA}_${xx.nopol}.pdf&embedded=true`, '_blank','closebuttoncaption=Close', 'location=no');
-	// 									window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xx.NOMOR_VA}_${xx.nopol}.pdf`, '_blank', 'location=no,closebuttoncaption=Close,enableViewportScale=yes');
-	// 									// var link = document.createElement('a');
-	// 									// link.href = 'http://uat-www.mnclife.com/evoucher/files/pdfm/'+xx.NOMOR_VA+'_'+xx.nopol+'.pdf';
-	// 									// link.download = 'file.pdf';
-	// 									// link.dispatchEvent(new MouseEvent('click'));
-									
-	// 								});
-	// 							})							
-													
-							
-	// 				}else{
-	// 					var html = '';			
-	// 					html += '<div class="toolbar">';
-	// 						html += '<div class="toolbar-inner">';
-	// 							html += '<div class="left">';
-	// 								html += '<a href="#" class="link disabled"></a>';
-	// 							html += '</div>';
-	// 							html += '<div class="center">Cetak Gagal</div>';
-	// 								html += '<div class="right">';
-	// 									html += '<a href="#" class="link close-popup">';
-	// 										html += '<i class="material-icons">clear</i>';
-	// 									html += '</a>';
-	// 								html += '</div>';
-	// 							html += '</div>';
-	// 					html += '</div>';
-	// 					html += '<div class="error-container">';
-	// 						html += '<div class="error-media">';
-	// 							html += '<img src="assets/custom/img/emoji-sad.svg" alt="Error" />';
-	// 						html += '</div>';
-	// 						html += '<div class="error-code">Ooppss..</div>';
-	// 							html += '<div class="error-message">'+xx.ERR+'.</div>';
-	// 						html += '</div>';
-	// 					// html += '<div class="content-block text-center">';
-	// 					// 	html += '<p>'+xx.ERR+'</p>';
-	// 					// html += '</div>';
-						
-	// 					$$('.page[data-page=status-voucher] .popup-status').append(html).html('');						
-	// 					$$('.page[data-page=status-voucher] .popup-status').append(html);	
-	// 					myApp.popup('.popup-status');			
-	// 				}
-								
-	// 			});
-	// 		});
-	// 	}
-	// });
 });
 
 
@@ -667,7 +535,7 @@ myApp.onPageInit('cetak', function(page) {
 			},
 			function(data, status){				
 				data.map((xx) => {
-					console.log(data);
+					//console.log(data);
 					if(xx.ERR == 'OK'){
 						var html = '';			
 							html += '<div class="toolbar">';
@@ -725,15 +593,10 @@ myApp.onPageInit('cetak', function(page) {
 
 						},
 						function(attr, status){	
-							console.log(status);	
-							myApp.hideIndicator();	
-								//window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xx.NOMOR_VA}_${xx.nopol}.pdf&embedded=true`, '_blank','closebuttoncaption=Close', 'location=no');
+							//console.log(status);	
+							myApp.hideIndicator();									
 								window.open(`${PDF_URL2}/pdf/${xx.nopol}.pdf`, '_system', 'location=yes')
-								//window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xx.NOMOR_VA}_${xx.nopol}.pdf`, '_blank', 'location=no,closebuttoncaption=Close,enableViewportScale=yes');
-								// var link = document.createElement('a');
-								// link.href = 'http://uat-www.mnclife.com/evoucher/files/pdfm/'+xx.NOMOR_VA+'_'+xx.nopol+'.pdf';
-								// link.download = 'file.pdf';
-								// link.dispatchEvent(new MouseEvent('click'));							
+										
 							})
 						});						
 	
@@ -941,7 +804,7 @@ myApp.onPageInit('aktivasi-voucher', function(page) {
 			var ahliwaris = $("input[name=ahliwaris]").val();
 
 		
-			console.log(tgllahir);
+			//console.log(tgllahir);
 			$.post(`${URL}/x-mob-voucher-js.php`,{
 				Nama: nama,
 				NO_PIN: pin,
@@ -955,7 +818,7 @@ myApp.onPageInit('aktivasi-voucher', function(page) {
 				ASAL_DATA: 'MOB'
 			},
 			function(data, status){	
-				console.log(pin);			
+				//console.log(pin);			
 				data.map((xx) => {
 					if(xx.ERR == 'OK'){							
 						
@@ -1024,6 +887,324 @@ myApp.onPageInit('aktivasi-voucher', function(page) {
 });
 
 
+
+/*
+|------------------------------------------------------------------------------
+| Events
+|------------------------------------------------------------------------------
+*/
+
+myApp.onPageInit('events', function(page) {
+
+	
+	
+	var html = '';
+	var status = 0;
+	var slider = '';
+
+
+	myApp.showIndicator();
+	$.get(`${URL}/x-mob-events.php`, 
+		function(data, status){
+		myApp.hideIndicator();
+		var slidex = '';	
+		//console.log(data)
+		if(data != null){
+			data.map((slide) => {			  
+				slidex +=  '<div class="swiper-slide"><img src="'+slide.IMG_SLIDER+'" class="swiper-img"  alt="'+slide.KETERANGAN+'"/></div>';													
+			})		
+		
+		
+			slider= '<div class="swiper-container">'+
+						'<div class="swiper-wrapper" >'+
+						
+							slidex +
+							
+						'</div>'+
+						'<div class="swiper-pagination"></div>'+
+					'</div>';
+			
+			html += slider;	
+			html += ' <div class="mobi"></div>'+
+					'<form name="events" action="#" method="POST" enctype="multipart/form-data">'+
+						'<div class="content-block-title">Informasi Peserta</div>'+
+						'<div class="list-block no-hairlines no-hairlines-between">'+
+						'<ul>'+
+							'<li>'+
+								'<div class="item-content">'+
+									'<div class="item-media">'+
+										'<i class="material-icons">person_outline</i>'+
+									'</div>'+
+									
+									'<div class="item-inner line_inner">'+
+
+										'<div class="item-input">'+
+											'<input type="text" name="nama" placeholder="Nama"/>'+
+										'</div>'+
+										'<div class="item-text input-error"></div>'+
+									'</div>'+
+								'</div>'+
+							'</li>'+
+
+							'<li class="align-top">'+
+								'<div class="item-content">'+
+									'<div class="item-media">'+
+										'<i class="material-icons">event_note</i>'+
+									'</div>'+
+									'<div class="item-inner line_inner">'+
+										'<div class="item-input">'+
+											'<input type="text" id="tgllahir" name="tgllahir" placeholder="Tanggal Lahir" readonly />'+
+										'</div>'+
+									'<div class="item-text input-error"></div>'+
+									'</div>'+
+								'</div>'+
+							'</li>'+
+
+
+							'<li>'+
+								'<div class="item-content">'+
+									'<div class="item-media">'+
+										'<i class="material-icons">card_membership</i>'+
+									'</div>'+
+									'<div class="item-inner line_inner">'+					
+										'<div class="item-input">'+                                        
+											'<input type="numpad"  id="numpad-limited-value-length" name="noktp"  placeholder="No KTP" />'+
+										'</div>'+
+										'<div class="item-text input-error"></div>'+
+									'</div>'+
+								'</div>'+
+							'</li>'+
+				
+							'<li>'+
+								'<div class="item-content">'+
+									'<div class="item-media">'+
+										'<i class="material-icons">mail_outline</i>'+
+									'</div>'+
+									'<div class="item-inner line_inner">	'+						
+										'<div class="item-input">'+
+											'<input type="email" name="email" placeholder="Email" required />'+
+											
+										'</div>'+
+										'<div class="item-text input-error"></div>'+
+									'</div>'+
+								'</div>'+
+							'</li>'+
+
+
+							'<li>'+
+								'<div class="item-content">'+
+									'<div class="item-media">'+
+										'<i class="material-icons">stay_current_portrait</i>'+
+									'</div>'+
+									'<div class="item-inner line_inner">	'+						
+										'<div class="item-input">'+
+											'<input type="text" name="hp" placeholder="No Handphone"/>'+
+										'</div>'+
+										'<div class="item-text input-error"></div>'+
+									'</div>'+
+								'</div>'+
+							'</li>'+
+				
+							'<li>'+
+								'<div class="item-content">'+
+									'<div class="item-media">'+
+										'<i class="material-icons">fiber_pin</i>'+
+									'</div>'+
+									'<div class="item-inner line_inner">'+
+
+										'<div class="item-input">'+
+											'<input type="text" name="pin" placeholder="Kode Aktivasi"/>'+
+										'</div>'+
+										'<div class="item-text input-error"></div>'+
+									'</div>'+
+								'</div>'+
+							'</li>'+
+
+						'</ul>'+
+					'</div>'+
+					'<div class="content-block">'+
+						'<button type="submit" class="button button-big button-block button-fill">Aktivasi</button>'+
+					'</div>'+
+				'</form>'+
+				'<div class="popup tablet-fullscreen pop-event"></div>';
+
+				document.getElementById("his_form").innerHTML = '';
+				document.getElementById("his_form").innerHTML = html;
+
+
+			
+				myApp.swiper('.swiper-container', {					
+					pagination: '.swiper-pagination',
+				});
+		
+				$("#tgllahir").mobiscroll({
+					preset: 'date',
+					theme: 'android-ics light',		
+					mode: 'scroller',
+				});
+				
+				var myNumpadLimitedValueLength = myApp.keypad({
+					input: '.page[data-page=events] #numpad-limited-value-length',
+					valueMaxLength: 16,
+					dotButton: false
+				});
+				
+
+				$('.page[data-page=events] form[name=events]').validate({
+					rules: {
+						pin: {
+							required: true,				
+						},
+						nama: {
+							required: true,				
+						},
+						noktp: {
+							required: true,
+							minlength: 16
+						},
+						tgllahir: {
+							required: true,				
+						},
+						
+						hp: {
+							required: true,				
+						},
+						email: {
+							required: true,
+							email:true
+						}
+					},
+				messages: {
+						pin: {
+							required: 'Mohon masukan PIN yang ada pada kartu',				
+						},
+						nama: {
+							required: 'Mohon masukan nama',				
+						},
+						noktp: {
+							required: 'Mohon masukan nomor penduduk',
+							minlength: 'KTP minimun harus 16 digit'
+						},
+						tgllahir: {
+							required: 'Mohon masukan tanggal lahir',				
+						},
+						hp: {
+							required: 'Mohon masukan nomor telepon yang digunakan',				
+						},
+						email: {
+							required: 'Mohon Masukan Alamat email',
+							email: 'Mohon masukan alamat email dengan benar'
+						}
+					},
+					onkeyup: false,
+				errorElement : 'div',
+					errorPlacement: function(error, element) {
+						error.appendTo(element.parent().siblings('.input-error'));
+					},
+					submitHandler: function(form) {			
+				
+						var nama = $("input[name=nama]").val();
+						var pin = $("input[name=pin]").val();
+						var noktp = $("input[name=noktp]").val();
+						var tgllahir = $("input[name=tgllahir]").val();			
+						var hp = $("input[name=hp]").val();
+						var email = $("input[name=email]").val();	
+				
+						$.post(`${URL}/x-mob-voucher-js.php`,{
+							Nama: nama,
+							NO_PIN: pin,
+							No_KTP: noktp,
+							Tanggal_Lahir: tgllahir,	
+							No_HP: hp,
+							Email: email,
+							ASAL_DATA: 'PRM',
+							Uuid : device.uuid
+						},
+						function(data, status){	
+							//console.log(pin);			
+							data.map((xx) => {					
+								if(xx.ERR == 'OK'){							
+									//console.log(xx);
+									var xhtml = '';			
+									xhtml += '<div class="toolbar">';
+										xhtml += '<div class="toolbar-inner">';
+											xhtml += '<div class="left">';
+												xhtml += '<a href="#" class="link disabled"></a>';
+											xhtml += '</div>';
+											xhtml += '<div class="center">Aktivasi Berhasil</div>';
+												xhtml += '<div class="right">';
+													xhtml += '<a href="#" class="link close-popup">';
+														xhtml += '<i class="material-icons">clear</i>';
+													xhtml += '</a>';
+												xhtml += '</div>';
+											xhtml += '</div>';
+									xhtml += '</div>';
+									xhtml += '<div class="error-container">';
+										xhtml += '<div class="error-media">';
+											xhtml += '<img src="assets/custom/img/success.svg" alt="Suksess" />';
+										xhtml += '</div>';
+										xhtml += '<div class="error-code">Sukses</div>';
+										xhtml += '<div class="error-message">Selamat! Anda telah dilindungi Asuransi Kecelakaan dari MNC Life<br/><br/>Silahkan periksa email Anda untuk informasi Manfaat Asuransi.</div>';
+									xhtml += '</div>';
+				
+									$$('.page[data-page=events] .pop-event').append(xhtml).html('');						
+									$$('.page[data-page=events] .pop-event').append(xhtml);						
+									myApp.popup('.pop-event');					
+								}else{
+									var xhtml = '';			
+									xhtml += '<div class="toolbar">';
+										xhtml += '<div class="toolbar-inner">';
+											xhtml += '<div class="left">';
+												xhtml += '<a href="#" class="link disabled"></a>';
+											xhtml += '</div>';
+											xhtml += '<div class="center">Aktivasi Gagal</div>';
+												xhtml += '<div class="right">';
+													xhtml += '<a href="#" class="link close-popup">';
+														xhtml += '<i class="material-icons">clear</i>';
+													xhtml += '</a>';
+												xhtml += '</div>';
+											xhtml += '</div>';
+									xhtml += '</div>';
+									xhtml += '<div class="error-container">';
+										xhtml += '<div class="error-media">';
+											xhtml += '<img src="assets/custom/img/emoji-sad.svg" alt="Error" />';
+										xhtml += '</div>';
+										xhtml += '<div class="error-code">Ooppss..</div>';
+											xhtml += '<div class="error-message">'+xx.ERR+'.</div>';
+										xhtml += '</div>';
+								
+									
+									$$('.page[data-page=events] .pop-event').append(xhtml).html('');						
+									$$('.page[data-page=events] .pop-event').append(xhtml);											
+									myApp.popup('.pop-event');			
+									// console.log(xhtml)
+								}
+								
+							})
+						});		
+				
+					}
+				});
+			}else{
+				var xhtml = '';			
+
+				xhtml += '<div class="error-container">';
+				xhtml += 	'<div class="error-media">';
+				xhtml += 		'<img src="assets/custom/img/events.png" alt="Error" />';
+				xhtml += 	'</div>';
+				xhtml += 	'<div class="error-code">Ooppss..</div>';
+				xhtml += 	'<div class="error-message">Party is Over</div>';
+				xhtml += '</div>';
+
+				document.getElementById("his_form").innerHTML = '';
+				document.getElementById("his_form").innerHTML = xhtml;
+
+			}
+		}
+	);
+
+});
+
 /*
 |------------------------------------------------------------------------------
 | Err
@@ -1038,7 +1219,7 @@ myApp.onPageInit('error', function(page) {
 				NO_INVOICE: id
 			},function(data) {
 				data.map((cc) => {
-					console.log(cc);
+					//console.log(cc);
 					if(cc.STATUS == '2'){
 						mainView.router.loadPage({
 							url:'done.html?id='+id, 
@@ -1062,7 +1243,7 @@ myApp.onPageInit('error', function(page) {
 							})
 							clearInterval(wait);
 						})
-						console.log('loop');		
+						//console.log('loop');		
 					}
 				})
 			})																		
@@ -1081,12 +1262,27 @@ myApp.onPageInit('error', function(page) {
 
 myApp.onPageInit('done', function(page) {	
 	var id = page.query.id;
+
+	$.post(`${URL}/x-mob-promo.php`,{
+		MODE: 2,
+		NO_INVOICE: id	
+	},function(data, status){					
+		if(data != null){
+			
+			if(data[0].jml > 0){
+			
+				$$('#promo').css('display','block');	
+				document.getElementById("promo").innerHTML = '<img src="assets/custom/img/notif.svg" />';
+			}
+		}
+	})
+
 	$.post(`${URL}/x-mob-check-done.php`,{
 		NO_INVOICE: id,			
 	},
 	function(data, status){				
 		data.map((xx) => {
-			console.log(xx);
+			//console.log(xx);
 			document.getElementById("invoice").innerHTML = "#"+xx.NO_INVOICE;
 			document.getElementById("price").innerHTML = "Rp "+ xx.AMOUNTV;
 			// document.getElementById("sub").innerHTML = "Rp "+ xx.AMOUNTV;
@@ -1097,18 +1293,6 @@ myApp.onPageInit('done', function(page) {
 			document.getElementById("qty").innerHTML = xx.JUMLAH +' Polis';
 			
 
-			// $$('#download-form').on('click', function(){
-			// 	var ref;
-			// 	var pageContent = '<html><head></head><body><form action="'+URL+'/x-mob-pdf.php" id="downloadRiwayat" method="post">' +
-			// 		'<input type="hidden" name="NOMOR_VA" id="NOMOR_VA" value="'+xx.NO_INVOICE+'">'+					
-			// 		'</form> <script type="text/javascript">document.getElementById("downloadRiwayat").submit();</script></body></html>';
-			// 	var pageContentUrl = 'data:text/html;base64,' + btoa(pageContent);
-			// 	var ref = window.cordova.InAppBrowser.open(
-			// 		pageContentUrl ,
-			// 		"_system",
-			// 		"hidden=no,location=no,closebuttoncaption=Done,clearsessioncache=yes,clearcache=yes"
-			// 	);															
-			// });
 
 			$$('#download-form').on('click', function(){
 				myApp.showIndicator();
@@ -1122,16 +1306,9 @@ myApp.onPageInit('done', function(page) {
 							NOMOR_VA : xy.NOMOR_VA										
 						},
 						function(attr, status){	
-							console.log(status);
+							//console.log(status);
 							myApp.hideIndicator();	
-							window.open(`${PDF_URL}/${xx.NO_INVOICE}.pdf`, '_system', 'location=yes')
-							//window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xx.NOMOR_VA}_${xx.nopol}.pdf&embedded=true`, '_blank','closebuttoncaption=Close', 'location=no');
-							//window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xy.NOMOR_VA}_${xy.nopol}.pdf`, '_blank', 'location=no,closebuttoncaption=Close,enableViewportScale=yes');										
-							// var link = document.createElement('a');
-							// link.href = 'http://uat-www.mnclife.com/evoucher/files/pdfm/'+xx.NOMOR_VA+'_'+xx.nopol+'.pdf';
-							// link.download = 'file.pdf';
-							// link.dispatchEvent(new MouseEvent('click'));
-												
+							window.open(`${PDF_URL}/${xx.NO_INVOICE}.pdf`, '_system', 'location=yes')			
 						})
 					})
 				})															
@@ -1161,7 +1338,7 @@ myApp.onPageInit('pending', function(page) {
 			document.getElementById("desc").innerHTML = xx.DESKRIPSI;
 			document.getElementById("qty").innerHTML = xx.JUMLAH +' Polis';
 
-			console.log(xx);
+			//console.log(xx);
 			var PILIH;
 			var STATUS;
 
@@ -1192,12 +1369,27 @@ myApp.onPageInit('pending', function(page) {
 
 myApp.onPageInit('riwayat', function(page) {	
 	var id = page.query.id;
+
+	$.post(`${URL}/x-mob-promo.php`,{
+		MODE: 2,
+		NO_INVOICE: id	
+	},function(data, status){					
+		if(data != null){
+			
+			if(data[0].jml > 0){
+			
+				$$('#promo').css('display','block');	
+				document.getElementById("promo").innerHTML = '<img src="assets/custom/img/notif.svg" />';
+			}
+		}
+	})
+
 	$.post(`${URL}/x-mob-check-done.php`,{
 		NO_INVOICE: id,			
 	},
 	function(data, status){				
 		data.map((xx) => {
-			console.log(xx);
+			//console.log(xx);
 			document.getElementById("invoice").innerHTML = "#"+xx.NO_INVOICE;
 			document.getElementById("price").innerHTML = "Rp "+ xx.AMOUNTV;
 			// document.getElementById("sub").innerHTML = "Rp "+ xx.AMOUNTV;
@@ -1215,13 +1407,13 @@ myApp.onPageInit('riwayat', function(page) {
 				function(data, status){				
 					data.map((xy) => {
 						
-						console.log(xy);
+						//console.log(xy);
 						$.post(`${URL}/x-mob-pdf.php`,{
 							NOMOR_VA : xx.NO_INVOICE						
 				
 						},
 						function(attr, status){	
-							console.log(status);
+							//console.log(status);
 							myApp.hideIndicator();
 							window.open(`${PDF_URL}/${xx.NO_INVOICE}.pdf`, '_system', 'location=yes')
 							//window.open(`https://docs.google.com/viewer?url=${PDF_URL}/${xy.NOMOR_VA}_${xy.nopol}.pdf`, '_blank', 'location=no,closebuttoncaption=Close,enableViewportScale=yes');										

@@ -1,11 +1,5 @@
 'use strict';
 
-const URL = 'https://mvoucher.mnclife.com/fetch'; 
-const PDF_URL2 = 'https://evoucher.mnclife.com'; 
-const PDF_URL = 'https://mvoucher.mnclife.com/file';
-const CLOSE_URL = 'http://uat-www.mnclife.com/evoucher/index.php?p=doku-payment-redirect';
-const CLOSE_URL2 = 'https://mvoucher.mnclife.com/index.html';
-const DOKU = 'https://pay.doku.com/Suite/Receive';
 /*
 |------------------------------------------------------------------------------
 | Pembelian Voucher
@@ -21,11 +15,7 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 		mode: 'scroller',
 	});
 	
-	/* Basic Calendar */
-	var calendarBasic = myApp.calendar({pembelian-vo
-    input: '.page[data-page=pembelian-voucher] #calendar-basic'
-	});
-
+	
 	
 	function randomString(STRlen) {
 		var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -265,8 +255,8 @@ myApp.onPageInit('pembelian-voucher', function(page) {
 						},function(data, status){					
 							if(data[0].WORDING_PROMO != null){
 								//console.log(data[0].WORDING_PROMO)								
-								$$('#promo').css('display','block');	
-								document.getElementById("promo").innerHTML = data[0].WORDING_PROMO;
+								$$('#promo').css('display','block');									
+								document.getElementById("promo").innerHTML = '<p style="text-align:justify">' +data[0].WORDING_PROMO +'</p>';
 							}
 						})						
 						myApp.hideIndicator();
@@ -1141,10 +1131,10 @@ myApp.onPageInit('events', function(page) {
 									xhtml += '</div>';
 									xhtml += '<div class="error-container">';
 										xhtml += '<div class="error-media">';
-											xhtml += '<img src="assets/custom/img/success.svg" alt="Suksess" />';
+											xhtml += xx.NOTIF_IMG;
 										xhtml += '</div>';
-										xhtml += '<div class="error-code">Sukses</div>';
-										xhtml += '<div class="error-message">Selamat! Anda telah dilindungi Asuransi Kecelakaan dari MNC Life<br/><br/>Silahkan periksa email Anda untuk informasi Manfaat Asuransi.</div>';
+										// xhtml += '<div class="error-code">Sukses</div>';
+										// xhtml += '<div class="error-message">Selamat! Anda telah dilindungi Asuransi Kecelakaan dari MNC Life<br/><br/>Silahkan periksa email Anda untuk informasi Manfaat Asuransi.</div>';
 									xhtml += '</div>';
 				
 									$$('.page[data-page=events] .pop-event').append(xhtml).html('');						
@@ -1267,12 +1257,11 @@ myApp.onPageInit('done', function(page) {
 		MODE: 2,
 		NO_INVOICE: id	
 	},function(data, status){					
-		if(data != null){
-			
-			if(data[0].jml > 0){
-			
+		if(data != null){			
+			if(data[0].jml > 0){	
+				console.log(data);		
 				$$('#promo').css('display','block');	
-				document.getElementById("promo").innerHTML = '<img src="assets/custom/img/notif.svg" />';
+				document.getElementById("promo").innerHTML = "<img src="+data[0].NOTIF_IMG+" />";
 			}
 		}
 	})
@@ -1377,9 +1366,9 @@ myApp.onPageInit('riwayat', function(page) {
 		if(data != null){
 			
 			if(data[0].jml > 0){
-			
+				console.log(data);	
 				$$('#promo').css('display','block');	
-				document.getElementById("promo").innerHTML = '<img src="assets/custom/img/notif.svg" />';
+				document.getElementById("promo").innerHTML = "<img src="+data[0].NOTIF_IMG+" />";
 			}
 		}
 	})

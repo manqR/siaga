@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "127508021910",
+    "firebase_url": "https://siaga-e9a53.firebaseio.com",
+    "project_id": "siaga-e9a53",
+    "storage_bucket": "siaga-e9a53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127508021910:android:ea5ffed6d46aad02",
+        "android_client_info": {
+          "package_name": "com.sigaapps.mnc.life"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127508021910-vf0bq6055q5l87jiffiv3r9jjg2kqdq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf5WEEHhpM9rVv6cB1a3OGk-5mOcsxHnc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -63,6 +63,8 @@ $$(document).on('ajaxComplete', function (e) {
 	myApp.hideIndicator();
 });
 
+
+
 /*
 |------------------------------------------------------------------------------
 | Set last saved color and layout theme

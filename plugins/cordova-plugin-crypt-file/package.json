@@ -10,7 +10,7 @@
         "spec": "latest",
         "type": "tag"
       },
-      "D:\\mobile\\mvoucher"
+      "D:\\Data\\mobile\\mvoucherPush"
     ]
   ],
   "_from": "cordova-plugin-crypt-file@latest",
@@ -45,7 +45,7 @@
   "_shasum": "1d1a233d34d6ea665fe710d7c5269378f9cc04f9",
   "_shrinkwrap": null,
   "_spec": "cordova-plugin-crypt-file",
-  "_where": "D:\\mobile\\mvoucher",
+  "_where": "D:\\Data\\mobile\\mvoucherPush",
   "author": {
     "name": "tkyaji"
   },
@@ -76,8 +76,7 @@
   ],
   "name": "cordova-plugin-crypt-file",
   "optionalDependencies": {},
-  "readme": "# Cordova crypt file plugin\nHTML source file is encrypted at build, and decrypted at run.  \nhttps://www.npmjs.com/package/cordova-plugin-crypt-file\n\n## Add Plugin\n`cordova plugin add cordova-plugin-crypt-file`\n\n## Encrypt\n`cordova build [ios / android]`\n\n## Decrypt\n`cordova emulate [ios / android]`  \nor  \n`cordova run [ios / android]`  \n\n## Encryption subjects.\n\n### Default\n\n* .html\n* .htm\n* .js\n* .css\n\n### Edit subjects\n\nYou can specify the encryption subjects by editing `plugin.xml`.\n\n**plugins/cordova-plugin-crypt-file/plugin.xml**\n\n```\n<cryptfiles>\n    <include>\n        <file regex=\"\\.(htm|html|js|css)$\" />\n    </include>\n    <exclude>\n        <file regex=\"exclude_file\\.js$\" />\n    </exclude>\n</cryptfiles>\n```\n\nSpecify the target file as a regular expression.\n\n\n## Supported platforms\n* iOS\n* Android\n* CrossWalk\n\n## Before reporting your issue\nIt would be very helpful if you show me your project (If you have GitHub repository, that URL would be nice).\nIt is very hard for me to reporduce your enviroment.\n\n## License\nApache version 2.0\n",
-  "readmeFilename": "README.md",
+  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tkyaji/cordova-plugin-crypt-file.git"

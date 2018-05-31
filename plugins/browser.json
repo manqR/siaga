@@ -7,16 +7,19 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-crypt-file": {
+    "cordova-plugin-device": {
       "PACKAGE_NAME": "com.sigaapps.mnc.life"
     },
-    "cordova-plugin-device": {
+    "cordova-plugin-firebase": {
       "PACKAGE_NAME": "com.sigaapps.mnc.life"
     },
     "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "com.sigaapps.mnc.life"
     },
     "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.sigaapps.mnc.life"
+    },
+    "cordova-plugin-crypt-file": {
       "PACKAGE_NAME": "com.sigaapps.mnc.life"
     }
   },

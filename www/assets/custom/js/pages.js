@@ -200,7 +200,8 @@ myApp.onPageInit('feedback', function(page) {
 */
 
 myApp.onPageInit('home', function(page) {
-
+	
+	
 	// MAP		
 	$(function() {
 		var map = new GMaps({
@@ -423,19 +424,95 @@ myApp.onPageInit('splash-screen', function(page) {
 	// 		});
 	// 	}, 2000);
 	// });
-		setTimeout(function(){
+
+
+// 	function onDeviceReady() {
+// 		// Now safe to use device APIs
+// 		console.log('ready');
+		// $.post(`${URL}/x-mob-device.php`,{
+		// 	DEVICE_ID: device.uuid,			
+		// },function(data, status){	
+		// 	data.map((xx) => {
+		// 		if(xx.DEVICE_ID == '' || xx.DEVICE_ID == null){
+		// 			setTimeout(function(){
+		// 				mainView.router.load({
+		// 					url: 'walkthrough.html'
+		// 				});
+		// 			}, 2000);
+		// 		}else{
+		// 			setTimeout(function(){
+		// 				mainView.router.load({
+		// 					url: 'home.html'
+		// 				});
+		// 			}, 2000);
+		// 		}
+		// 	})
+		// })	
+		// /* 1 second after page is loaded, show preloader. */
+		
+		// setTimeout(function() {
+		// 	$$('.page[data-page=splash-screen] .splash-preloader').css('opacity', 1);
+		// }, 1000);
+
+// 	}	
+	
+// });
+
+// document.addEventListener("deviceready", onDeviceReady, false);
+
+
+	// function initialize(){
+	// 	document.addEventListener("deviceready", onDeviceReady, false);
+	// }
+
+	// function onDeviceReady() {
+	// 	console.log('ready');
+	// 	$.post(`${URL}/x-device.php`,{
+	// 		DEVICE_ID: device.uuid,			
+	// 	},function(data, status){	
+	// 		data.map((xx) => {
+	// 			//console.log(xx)
+	// 			if(xx.DEVICE_ID == '' || xx.DEVICE_ID == null){
+	// 				setTimeout(function(){
+	// 					console.log('a')
+	// 					mainView.router.load({
+	// 						url: 'walkthrough.html'
+	// 					});
+	// 				}, 2000);
+	// 			}else{
+	// 				console.log('b')
+	// 				setTimeout(function(){
+	// 					mainView.router.load({
+	// 						url: 'home.html'
+	// 					});
+	// 				}, 2000);
+	// 			}
+	// 		})
+	// 	})	
+		setTimeout(function(){			
 			mainView.router.load({
 				url: 'walkthrough.html'
 			});
 		}, 2000);
-	/* 1 second after page is loaded, show preloader. */
-	setTimeout(function() {
-		$$('.page[data-page=splash-screen] .splash-preloader').css('opacity', 1);
-	}, 1000);
+		/* 1 second after page is loaded, show preloader. */		
+		setTimeout(function() {
+			$$('.page[data-page=splash-screen] .splash-preloader').css('opacity', 1);
+		}, 1000);
 
+	
+
+
+	
+
+	// setTimeout(function(){
+	// 	mainView.router.load({
+	// 		url: 'walkthrough.html'
+	// 	});
+	// }, 2000);
+	// setTimeout(function() {
+	// 	$$('.page[data-page=splash-screen] .splash-preloader').css('opacity', 1);
+	// }, 1000);
 });
-
-
 /*
 |------------------------------------------------------------------------------
 | Walkthrough
